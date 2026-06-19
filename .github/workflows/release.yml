@@ -1,0 +1,37 @@
+name: Release Binary
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Build and Upload Binaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install @yao-pkg/pkg globally
+        run: npm install -g @yao-pkg/pkg
+
+      - name: Build binaries
+        run: npm run build
+
+      - name: Upload binaries to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            dist/meo-agent-win.exe
+            dist/meo-agent-macos
+        fail_on_unmatched_files: false
