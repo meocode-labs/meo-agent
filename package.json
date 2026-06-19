@@ -1,6 +1,6 @@
 {
   "name": "meo-agent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Wget-like CLI for downloading files via HTTP/HTTPS, distributed as a single static binary via @yao-pkg/pkg and GitHub Actions release workflow.",
   "main": "index.js",
   "bin": {
@@ -12,7 +12,8 @@
   "pkg": {
     "targets": [
       "node18-win-x64",
-      "node18-macos-x64"
+      "node18-macos-x64",
+      "node18-linux-x64"
     ],
     "outputPath": "dist"
   },
@@ -43,6 +44,7 @@
   "files": [
     "index.js",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ]
 }

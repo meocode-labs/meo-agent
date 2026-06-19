@@ -7,5 +7,6 @@ node_modules/
 *.md
 !README.md
 !LICENSE
+!CHANGELOG.md
 .gitignore
 .npmignore
