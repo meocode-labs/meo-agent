@@ -83,8 +83,12 @@ meo-agent https://example.com/file.zip
 Features:
 
 - HTTP & HTTPS support
-- Auto-detected output filename from URL path
+- Auto-detected output filename from URL path (`-o` to override)
 - Streaming writes — no full buffering in memory
+- Progress bar to stderr
+- Resume interrupted downloads (`-c` / `--continue`)
+- JSON output mode (`--json`) for AI agent consumption
+- Environment diagnostics (`meo-agent doctor`)
 - Cross-platform static binary (no Node.js install required on target)
 
 **Source:** [`index.js`](index.js) · **Packaging:** [`@yao-pkg/pkg`](https://github.com/yao-pkg/pkg)
@@ -229,19 +233,51 @@ npm unlink -g meo-agent
 ### meo-agent CLI
 
 ```
-meo-agent <URL>
+meo-agent [options] <URL>
+meo-agent [options] doctor
 ```
 
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `URL`    | Yes      | Full HTTP or HTTPS URL of the file to download |
+**Options:**
 
-Examples:
+| Flag | Description |
+|------|-------------|
+| `-o, --output <name>` | Save to a custom filename (default: URL basename) |
+| `-c, --continue` | Resume a partial download if server supports `Range` |
+| `-j, --json` | Emit machine-readable JSON events to stdout (for AI agents) |
+| `-q, --quiet` | Suppress progress output, only print errors |
+| `--timeout <sec>` | Network timeout in seconds (default: 30) |
+| `-V, --version` | Print version and exit |
+| `-h, --help` | Print help and exit |
+
+**Examples:**
 
 ```bash
+# Basic download
 meo-agent https://github.com/meocode-labs/meo-agent/archive/refs/heads/main.zip
-meo-agent https://cdn.example.com/image.png
-meo-agent https://api.example.com/v1/export.json
+
+# Custom output filename
+meo-agent -o backup.zip https://example.com/file.zip
+
+# Resume an interrupted download
+meo-agent --continue https://example.com/large-file.iso
+
+# JSON output for AI agents (pipe to jq)
+meo-agent --json https://example.com/data.json | jq
+
+# Quiet mode (errors only)
+meo-agent --quiet https://example.com/file.zip
+
+# Environment diagnostics
+meo-agent doctor
+```
+
+**JSON event schema** (emitted one per line when `--json` is set):
+
+```json
+{"event":"start","url":"...","output":"...","ts":1700000000000}
+{"event":"progress","received":1024,"total":2048,"percent":50,"ts":...}
+{"event":"finish","output":"...","bytes":2048,"elapsed_sec":1.23,"status":200,"resumed":false}
+{"event":"error","message":"...","code":"...","ts":...}
 ```
 
 ### developer-kit
@@ -352,12 +388,16 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ## Roadmap
 
-- [ ] Progress bar for large downloads (`meo-agent`)
-- [ ] Resume support (`--continue`)
-- [ ] Custom output filename (`--output <name>`)
-- [ ] JSON output mode for AI agents (`--json`)
+- [x] Progress bar for large downloads (`meo-agent`) — **shipped in 1.1.0**
+- [x] Resume support (`--continue`) — **shipped in 1.1.0**
+- [x] Custom output filename (`--output <name>`) — **shipped in 1.1.0**
+- [x] JSON output mode for AI agents (`--json`) — **shipped in 1.1.0**
+- [x] `meo-agent doctor` — environment diagnostics — **shipped in 1.1.0**
 - [ ] Plugin architecture for additional developer tools
-- [ ] `meo-agent doctor` — environment diagnostics
+- [ ] Checksum verification (`--sha256`)
+- [ ] Mirror mode (recursive)
+- [ ] Config file (`~/.meo-agent.json`)
+- [ ] Auth via headers (`--header "Authorization: Bearer ..."`)
 
 ---
 

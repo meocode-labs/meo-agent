@@ -1,13 +1,14 @@
 {
   "name": "meo-agent",
-  "version": "1.0.3",
-  "description": "The unified AI agent runtime from Meo Code Labs — bundles a wget-like CLI, developer-kit (use case scaffolder), and generate-pr (PR description generator) into one cross-platform distribution.",
+  "version": "1.1.0",
+  "description": "The unified AI agent runtime from Meo Code Labs — bundles a wget-like CLI with --json/--output/--continue/doctor features, developer-kit (use case scaffolder), and generate-pr (PR description generator) into one cross-platform distribution.",
   "main": "index.js",
   "bin": {
-    "meo-agent": "./index.js"
+    "meo-agent": "./bin/meo-agent.js"
   },
   "scripts": {
-    "build": "npx @yao-pkg/pkg ."
+    "build": "pkg .",
+    "test": "node test/test.js"
   },
   "devDependencies": {
     "@yao-pkg/pkg": "^5.16.1"
@@ -18,7 +19,12 @@
       "node18-macos-x64",
       "node18-linux-x64"
     ],
-    "outputPath": "dist"
+    "outputPath": "dist",
+    "scripts": [
+      "index.js",
+      "bin/**/*.js",
+      "lib/**/*.js"
+    ]
   },
   "repository": {
     "type": "git",
@@ -58,13 +64,19 @@
     "ai-tooling",
     "developer-kit",
     "generate-pr",
-    "terminal"
+    "terminal",
+    "progress-bar",
+    "json",
+    "resume",
+    "doctor"
   ],
   "engines": {
     "node": ">=18"
   },
   "files": [
     "index.js",
+    "bin/",
+    "lib/",
     "developer-kit/",
     "pull_request/",
     "README.md",

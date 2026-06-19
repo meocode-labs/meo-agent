@@ -26,10 +26,15 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --include=dev
 
-      - name: Install @yao-pkg/pkg globally
-        run: npm install -g @yao-pkg/pkg
+      - name: Verify pkg binary is available
+        run: |
+          if [ ! -x node_modules/.bin/pkg ]; then
+            echo "::error::pkg binary not found in node_modules/.bin/"
+            exit 1
+          fi
+          ./node_modules/.bin/pkg --version
 
       - name: Read version from package.json
         id: version
@@ -52,7 +57,7 @@ jobs:
 
       - name: Build binaries
         if: steps.check_tag.outputs.exists == 'false'
-        run: npm run build
+        run: ./node_modules/.bin/pkg .
 
       - name: Verify binaries
         if: steps.check_tag.outputs.exists == 'false'
@@ -85,6 +90,7 @@ jobs:
             echo "|----------|------|"
             echo "| Windows  | \`meo-agent-win.exe\` |"
             echo "| macOS    | \`meo-agent-macos\` |"
+            echo "| Linux    | \`meo-agent-linux\` |"
             echo ""
             echo "### Installation"
             echo ""
@@ -92,15 +98,11 @@ jobs:
             echo "# npm (cross-platform)"
             echo "npm install -g meo-agent"
             echo ""
-            echo "# macOS"
-            echo "chmod +x meo-agent-macos"
-            echo "./meo-agent-macos <URL>"
-            echo ""
-            echo "# Windows"
-            echo "./meo-agent-win.exe <URL>"
+            echo "# Static binary"
+            echo "chmod +x meo-agent-macos && ./meo-agent-macos <URL>"
             echo "\`\`\`"
             echo ""
-            echo "### Changelog"
+            echo "### What's New"
             echo ""
 
             if [ -n "$RANGE" ]; then

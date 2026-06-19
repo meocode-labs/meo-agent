@@ -5,3 +5,6 @@ meo-agent-linux
 dist/
 *.log
 .DS_Store
+coverage/
+.tmp/
+package-lock.json

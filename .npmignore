@@ -6,6 +6,8 @@ node_modules/
 .DS_Store
 .gitignore
 .npmignore
+coverage/
+test/
 developer-kit/output/
 pull_request/output/
 !README.md
