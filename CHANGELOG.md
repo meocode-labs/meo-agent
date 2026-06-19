@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-06-19
+
+### Changed
+- README rewritten with prominent **Quick Start** section at the top — users can now choose between npm install (Node 18+) or standalone binary download in seconds
+- Installation section restructured into two clear paths (A: npm, B: standalone binary) with side-by-side "which path should I pick?" comparison table
+- Removed redundant "End Users" / "Developers" split — replaced with task-oriented guidance
+
+### Published
+- npm: https://www.npmjs.com/package/@penadidik/meo-agent
+
 ## [1.2.0] - 2026-06-19
 
 ### Added — Final roadmap batch
@@ -26,7 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Roadmap item: "Auth via headers" — deferred (not a core wget feature)
 
-[Unreleased]: https://github.com/meocode-labs/meo-agent/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/meocode-labs/meo-agent/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/meocode-labs/meo-agent/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/meocode-labs/meo-agent/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/meocode-labs/meo-agent/compare/v1.0.3...v1.1.0
 

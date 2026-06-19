@@ -21,8 +21,43 @@
 
 ---
 
+## Quick Start
+
+**Two install paths. Pick one and start using it in 30 seconds.**
+
+### If you have Node.js 18+
+
+```bash
+npm install -g @penadidik/meo-agent
+meo-agent https://example.com/file.zip
+```
+
+### If you don't have Node.js (or don't want it)
+
+1. Download the binary for your OS from [**Releases → Latest**](https://github.com/meocode-labs/meo-agent/releases/latest):
+   - Windows: `meo-agent-win.exe`
+   - macOS: `meo-agent-macos`
+   - Linux: `meo-agent-linux`
+2. Run it:
+
+   ```bash
+   # macOS / Linux
+   chmod +x meo-agent-macos
+   ./meo-agent-macos https://example.com/file.zip
+
+   # Windows (PowerShell)
+   .\meo-agent-win.exe https://example.com/file.zip
+   ```
+
+That's it — no installer, no runtime, no dependencies.
+
+📖 **Detailed installation instructions, troubleshooting, and build-from-source:** see [Installation](#installation) below.
+
+---
+
 ## Table of Contents
 
+- [Quick Start](#quick-start)
 - [About Meo Code Labs](#about-meo-code-labs)
 - [Why meo-agent?](#why-meo-agent)
 - [Tools Bundled](#tools-bundled)
@@ -156,43 +191,97 @@ Full docs: [`pull_request/README.md`](pull_request/README.md)
 
 ## Installation
 
-### End Users — Prebuilt Binary (recommended)
+Pick **one** of the two paths below. Both produce the same `meo-agent` command.
 
-Download the prebuilt binary from the [**Releases**](../../releases) page.
+### Path A — npm (requires Node.js 18+)
+
+```bash
+npm install -g @penadidik/meo-agent
+meo-agent https://example.com/file.zip
+```
+
+Verify:
+
+```bash
+meo-agent --version
+# meo-agent 1.2.0
+```
+
+To update later:
+
+```bash
+npm update -g @penadidik/meo-agent
+```
+
+To uninstall:
+
+```bash
+npm uninstall -g @penadidik/meo-agent
+```
+
+📦 npm package: https://www.npmjs.com/package/@penadidik/meo-agent
+
+---
+
+### Path B — Standalone binary (no Node.js required)
+
+Download a single static binary from [**GitHub Releases**](https://github.com/meocode-labs/meo-agent/releases/latest) and run it directly. No install, no dependencies, no runtime.
 
 #### Windows
 
 ```powershell
-# Download meo-agent-win.exe from latest release, then in PowerShell:
+# 1. Download meo-agent-win.exe from the latest release
+# 2. Place it anywhere; optionally rename to meo-agent.exe
+# 3. Run:
 .\meo-agent-win.exe https://example.com/file.zip
 ```
+
+To make it available globally, move the `.exe` to a folder in your `PATH` (e.g. `C:\Windows\System32\` or `%USERPROFILE%\.local\bin\`).
 
 #### macOS
 
 ```bash
+# 1. Download meo-agent-macos from the latest release
 chmod +x meo-agent-macos
 ./meo-agent-macos https://example.com/file.zip
+
+# Optional: install to /usr/local/bin for global access
+sudo mv meo-agent-macos /usr/local/bin/meo-agent
+meo-agent https://example.com/file.zip
 ```
 
 #### Linux
 
 ```bash
+# 1. Download meo-agent-linux from the latest release
 chmod +x meo-agent-linux
 ./meo-agent-linux https://example.com/file.zip
-```
 
-#### via npm
-
-```bash
-npm install -g @meocode-labs/meo-agent
+# Optional: install to /usr/local/bin for global access
+sudo mv meo-agent-linux /usr/local/bin/meo-agent
 meo-agent https://example.com/file.zip
 ```
 
-> Requires Node.js ≥ 18 on the target machine.
+📦 GitHub Releases: https://github.com/meocode-labs/meo-agent/releases/latest
 
 ---
 
-### Developers — From Source
+### Which path should I pick?
+
+| If you… | Use |
+|---------|-----|
+| Already have Node.js 18+ installed | **Path A** (npm) |
+| Need zero install / no runtime dependencies | **Path B** (binary) |
+| Are scripting inside CI/CD or Docker | **Path B** (binary) |
+| Want automatic updates via `npm update` | **Path A** (npm) |
+| Need to support ancient systems or restricted environments | **Path B** (binary) |
+| Want to ship meo-agent as part of your tool | **Path B** (binary) |
+
+Both paths produce the **same CLI** with identical features and behavior.
+
+---
+
+### Developers — Building from source
 
 ```bash
 git clone https://github.com/meocode-labs/meo-agent.git
