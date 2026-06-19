@@ -8,9 +8,7 @@ node_modules/
 .npmignore
 coverage/
 test/
-developer-kit/output/
-pull_request/output/
+!**/*.md
 !README.md
 !LICENSE
 !CHANGELOG.md
-!**/*.md
