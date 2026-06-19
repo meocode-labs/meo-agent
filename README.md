@@ -7,7 +7,7 @@ A simple `wget` clone built with Node.js. Download any file via URL from the ter
 Clone the repository and link it globally so you can run `meo-agent` as a terminal command:
 
 ```bash
-git clone https://github.com/penadidik/meo-agent.git
+git clone https://github.com/meocode-labs/meo-agent.git
 cd meo-agent
 npm install
 npm link

@@ -16,5 +16,33 @@
     ],
     "outputPath": "dist"
   },
-  "license": "MIT"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meocode-labs/meo-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/meocode-labs/meo-agent/issues"
+  },
+  "homepage": "https://github.com/meocode-labs/meo-agent#readme",
+  "author": {
+    "name": "penadidik"
+  },
+  "license": "MIT",
+  "keywords": [
+    "wget",
+    "cli",
+    "downloader",
+    "http",
+    "https",
+    "download",
+    "terminal"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ]
 }

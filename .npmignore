@@ -1,0 +1,11 @@
+.github/
+dist/
+node_modules/
+*.exe
+*.log
+.DS_Store
+*.md
+!README.md
+!LICENSE
+.gitignore
+.npmignore
