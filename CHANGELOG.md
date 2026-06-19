@@ -7,7 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.0] - 2026-06-19
+## [1.2.0] - 2026-06-19
+
+### Added — Final roadmap batch
+- **Checksum verification** (`--sha256 <hash>`) — verifies downloaded file integrity via SHA256, exits with code 2 on mismatch
+- **Mirror mode** (`--mirror` / `-m`) — recursive HTML page mirroring with `--mirror-depth` and `--mirror-limit` controls
+- **Config file support** (`~/.meo-agent.json` or `--config <path>`) — set defaults for timeout, retries, headers, mirror depth, plugins
+- **Plugin architecture** (`lib/plugins.js`) — load JS plugins from `.meo-agent/plugins/`, `~/.meo-agent/plugins/`, or `~/.config/meo-agent/plugins/`
+- **Plugin hooks** — `before_download`, `after_download` for extending behavior
+- **`meo-agent plugins`** — list loaded plugins with version, description, hooks
+- **Example plugin** (`examples/plugins/meo-agent-logger.js`) — logs every download event to stderr
+
+### Changed
+- CLI restructured into subcommands: `meo-agent <url>`, `meo-agent doctor`, `meo-agent mirror <url>`, `meo-agent plugins`
+- Test suite expanded to 20 assertions covering args parser, checksum, config, plugins
+- Help output reorganized with config-file lookup order and plugin directories
+
+### Removed
+- Roadmap item: "Auth via headers" — deferred (not a core wget feature)
+
+[Unreleased]: https://github.com/meocode-labs/meo-agent/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/meocode-labs/meo-agent/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/meocode-labs/meo-agent/compare/v1.0.3...v1.1.0
 
 ### Added — Roadmap milestones shipped
 - **Progress bar** for large downloads — live `[████░░░░] 50%  1.20 / 2.40 MB` indicator

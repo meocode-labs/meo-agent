@@ -85,10 +85,14 @@ Features:
 - HTTP & HTTPS support
 - Auto-detected output filename from URL path (`-o` to override)
 - Streaming writes — no full buffering in memory
-- Progress bar to stderr
+- Progress bar to stderr (`[████░░░░] 50% 1.20/2.40 MB`)
 - Resume interrupted downloads (`-c` / `--continue`)
+- SHA256 checksum verification (`--sha256`)
+- Mirror mode (`-m` / `--mirror`) with depth & limit controls
 - JSON output mode (`--json`) for AI agent consumption
 - Environment diagnostics (`meo-agent doctor`)
+- Plugin system (`meo-agent plugins`) with `before_download` / `after_download` hooks
+- Config file (`~/.meo-agent.json`) for default settings
 - Cross-platform static binary (no Node.js install required on target)
 
 **Source:** [`index.js`](index.js) · **Packaging:** [`@yao-pkg/pkg`](https://github.com/yao-pkg/pkg)
@@ -234,18 +238,26 @@ npm unlink -g meo-agent
 
 ```
 meo-agent [options] <URL>
+meo-agent [options] mirror <URL> -o <dir>
 meo-agent [options] doctor
+meo-agent [options] plugins
 ```
 
 **Options:**
 
 | Flag | Description |
 |------|-------------|
-| `-o, --output <name>` | Save to a custom filename (default: URL basename) |
-| `-c, --continue` | Resume a partial download if server supports `Range` |
-| `-j, --json` | Emit machine-readable JSON events to stdout (for AI agents) |
+| `-o, --output <name>` | Save to a custom filename (or directory for `mirror`) |
+| `-c, --continue` | Resume a partial download via HTTP `Range` |
+| `-m, --mirror` | Mirror mode — recursively download HTML pages + linked assets |
+| `--mirror-depth <N>` | Max recursion depth for mirror mode (default: 2) |
+| `--mirror-limit <N>` | Max total pages to mirror (default: 50) |
+| `--sha256 <hash>` | Verify downloaded file matches SHA256 hash |
+| `-j, --json` | Emit machine-readable JSON events to stdout |
 | `-q, --quiet` | Suppress progress output, only print errors |
 | `--timeout <sec>` | Network timeout in seconds (default: 30) |
+| `--config <path>` | Load config from custom JSON path |
+| `--list-plugins` | List loaded plugins and exit |
 | `-V, --version` | Print version and exit |
 | `-h, --help` | Print help and exit |
 
@@ -258,6 +270,12 @@ meo-agent https://github.com/meocode-labs/meo-agent/archive/refs/heads/main.zip
 # Custom output filename
 meo-agent -o backup.zip https://example.com/file.zip
 
+# Verify SHA256 checksum
+meo-agent --sha256=abc123... https://example.com/file.zip
+
+# Mirror a docs site
+meo-agent --mirror --mirror-depth 3 -o ./docs https://docs.example.com/
+
 # Resume an interrupted download
 meo-agent --continue https://example.com/large-file.iso
 
@@ -269,6 +287,9 @@ meo-agent --quiet https://example.com/file.zip
 
 # Environment diagnostics
 meo-agent doctor
+
+# List loaded plugins
+meo-agent plugins
 ```
 
 **JSON event schema** (emitted one per line when `--json` is set):
@@ -278,6 +299,38 @@ meo-agent doctor
 {"event":"progress","received":1024,"total":2048,"percent":50,"ts":...}
 {"event":"finish","output":"...","bytes":2048,"elapsed_sec":1.23,"status":200,"resumed":false}
 {"event":"error","message":"...","code":"...","ts":...}
+{"event":"checksum_ok","expected":"...","actual":"..."}
+{"event":"mirror_done","count":12,"results":[...]}
+```
+
+**Config file format** (`~/.meo-agent.json`):
+
+```json
+{
+  "timeout": 60,
+  "retries": 3,
+  "headers": { "Authorization": "Bearer ..." },
+  "outputDir": "~/Downloads",
+  "mirrorMaxDepth": 3,
+  "mirrorLimit": 100
+}
+```
+
+**Plugin example** (`~/.meo-agent/plugins/my-plugin.js`):
+
+```js
+module.exports = {
+  name: 'my-plugin',
+  version: '1.0.0',
+  hooks: [
+    {
+      name: 'before_download',
+      handler: async (ctx) => {
+        process.stderr.write(`Downloading ${ctx.url}...\n`);
+      }
+    }
+  ]
+};
 ```
 
 ### developer-kit
@@ -338,13 +391,28 @@ To release a new version:
 ```
 meo-agent/
 ├── .github/workflows/release.yml   # Auto-build & release on push to main
+├── bin/
+│   └── meo-agent.js                # CLI entry point
+├── lib/                            # Core modules
+│   ├── args.js                     # Argument parser
+│   ├── checksum.js                 # SHA256 verification
+│   ├── config.js                   # Config file loader
+│   ├── doctor.js                   # Environment diagnostics
+│   ├── downloader.js               # HTTP/HTTPS download logic
+│   ├── mirror.js                   # Recursive mirror mode
+│   ├── plugins.js                  # Plugin manager
+│   └── reporter.js                 # Output (human + JSON)
+├── examples/plugins/
+│   └── meo-agent-logger.js         # Example plugin
 ├── developer-kit/                  # Use case scaffolder (bash + templates)
 │   ├── developer-kit.sh
 │   └── templates/{requirements,tasks,tdd}.md
 ├── pull_request/                   # PR description generator (bash + templates)
 │   ├── generate-pr.sh
 │   └── templates/{basic,lead-review,hod-review}.md
-├── index.js                        # meo-agent CLI source
+├── test/
+│   └── test.js                     # Unit tests (20 assertions)
+├── index.js                        # Backward-compat entry → bin/meo-agent.js
 ├── package.json
 ├── README.md
 ├── CHANGELOG.md
@@ -388,16 +456,23 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ## Roadmap
 
-- [x] Progress bar for large downloads (`meo-agent`) — **shipped in 1.1.0**
+All initial roadmap items shipped.
+
+- [x] Progress bar for large downloads — **shipped in 1.1.0**
 - [x] Resume support (`--continue`) — **shipped in 1.1.0**
 - [x] Custom output filename (`--output <name>`) — **shipped in 1.1.0**
 - [x] JSON output mode for AI agents (`--json`) — **shipped in 1.1.0**
 - [x] `meo-agent doctor` — environment diagnostics — **shipped in 1.1.0**
-- [ ] Plugin architecture for additional developer tools
-- [ ] Checksum verification (`--sha256`)
-- [ ] Mirror mode (recursive)
-- [ ] Config file (`~/.meo-agent.json`)
-- [ ] Auth via headers (`--header "Authorization: Bearer ..."`)
+- [x] Checksum verification (`--sha256`) — **shipped in 1.2.0**
+- [x] Mirror mode (recursive, with depth & limit) — **shipped in 1.2.0**
+- [x] Config file (`~/.meo-agent.json`) — **shipped in 1.2.0**
+- [x] Plugin architecture with hooks (`before_download`, `after_download`) — **shipped in 1.2.0**
+
+Future ideas:
+- [ ] WebDAV / S3 backend support
+- [ ] Interactive TUI mode (`meo-agent tui`)
+- [ ] Auto-update via GitHub Releases API
+- [ ] Multi-URL batch downloads (`meo-agent urls.txt`)
 
 ---
 
