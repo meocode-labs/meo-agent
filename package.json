@@ -1,7 +1,7 @@
 {
   "name": "meo-agent",
-  "version": "1.0.2",
-  "description": "Wget-like CLI for downloading files via HTTP/HTTPS, distributed as a single static binary via @yao-pkg/pkg and GitHub Actions release workflow.",
+  "version": "1.0.3",
+  "description": "The unified AI agent runtime from Meo Code Labs — bundles a wget-like CLI, developer-kit (use case scaffolder), and generate-pr (PR description generator) into one cross-platform distribution.",
   "main": "index.js",
   "bin": {
     "meo-agent": "./index.js"
@@ -29,16 +29,35 @@
   },
   "homepage": "https://github.com/meocode-labs/meo-agent#readme",
   "author": {
-    "name": "penadidik"
+    "name": "penadidik",
+    "email": "researcher@meocode.com",
+    "url": "https://github.com/penadidik"
+  },
+  "contributors": [
+    {
+      "name": "Meo Code Labs",
+      "url": "https://meocode.com"
+    }
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/meocode-labs"
   },
   "license": "MIT",
   "keywords": [
+    "meo-agent",
+    "meo-code-labs",
+    "meocode",
     "wget",
     "cli",
     "downloader",
     "http",
     "https",
-    "download",
+    "developer-tools",
+    "ai-agents",
+    "ai-tooling",
+    "developer-kit",
+    "generate-pr",
     "terminal"
   ],
   "engines": {
@@ -46,6 +65,8 @@
   },
   "files": [
     "index.js",
+    "developer-kit/",
+    "pull_request/",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"

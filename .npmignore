@@ -4,9 +4,11 @@ node_modules/
 *.exe
 *.log
 .DS_Store
-*.md
+.gitignore
+.npmignore
+developer-kit/output/
+pull_request/output/
 !README.md
 !LICENSE
 !CHANGELOG.md
-.gitignore
-.npmignore
+!**/*.md

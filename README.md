@@ -1,100 +1,182 @@
 # meo-agent
 
-> **A minimal, dependency-free wget clone for the modern terminal.**
-> Download files via HTTP/HTTPS — install once, run anywhere as a single static binary.
+> **The AI agent runtime from Meo Code Labs — a unified CLI for downloading files, scaffolding use cases, and auto-generating pull requests.**
+>
+> Built for developers, researchers, and AI-augmented workflows.
 
 [![Latest Release](https://img.shields.io/github/v/release/meocode-labs/meo-agent)](https://github.com/meocode-labs/meo-agent/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%E2%89%A518-green)](https://nodejs.org)
+[![Meo Code Labs](https://img.shields.io/badge/Meo%20Code%20Labs-meocode.com-blue)](https://meocode.com)
 
-`meo-agent` is a lightweight command-line tool that fetches any file from the web straight to your local disk. It is built with Node.js core modules only and packaged as a standalone executable — no runtime required on the target machine.
+`meo-agent` is a lightweight, **multi-tool AI agent runtime** distributed by [Meo Code Labs](https://meocode.com). It is designed to be a single, well-maintained entry point that bundles several developer utilities used across AI-assisted workflows:
+
+| Tool | Purpose |
+|------|---------|
+| **meo-agent** (this repo) | Wget-like CLI — download any file via HTTP/HTTPS as a single static binary |
+| **developer-kit** | Auto-scaffold `usecase-NNN/` folders (`requirements.md`, `tasks.md`, `tdd.md`) from a brief |
+| **generate-pr** | Auto-generate pull request descriptions from git diffs (`basic`, `lead`, `hod` review levels) |
+
+> These companion tools live as modules inside this repository (`developer-kit/`, `pull_request/`) and are also exposed as opencode slash commands (`/developer-kit`, `/generate-pr`).
 
 ---
 
 ## Table of Contents
 
+- [About Meo Code Labs](#about-meo-code-labs)
 - [Why meo-agent?](#why-meo-agent)
-- [Features](#features)
+- [Tools Bundled](#tools-bundled)
+  - [1. meo-agent (CLI)](#1-meo-agent-cli)
+  - [2. developer-kit](#2-developer-kit)
+  - [3. generate-pr](#3-generate-pr)
 - [Installation](#installation)
-  - [End Users (recommended)](#end-users-recommended)
-  - [Developers (from source)](#developers-from-source)
-- [Usage](#usage)
-- [Examples](#examples)
+- [Usage by Tool](#usage-by-tool)
 - [Build from Source](#build-from-source)
-- [How It Works](#how-it-works)
 - [Project Structure](#project-structure)
-- [Contributing](#contributing)
+- [Maintainers](#maintainers)
 - [License](#license)
+
+---
+
+## About Meo Code Labs
+
+[Meo Code Labs](https://meocode.com) is a research-driven software organization focused on **AI-augmented developer tooling**. We build small, dependable utilities that fit naturally into the workflow of engineers and AI agents alike.
+
+- 🌐 Website: [https://meocode.com](https://meocode.com)
+- 🧑‍💻 Lead Maintainer: [@penadidik](https://github.com/penadidik)
+- 🏢 Organization: [github.com/meocode-labs](https://github.com/meocode-labs)
+- 📦 Repositories: [github.com/meocode-labs](https://github.com/meocode-labs)
+
+If you use our tools in research or production, we'd love to hear from you.
 
 ---
 
 ## Why meo-agent?
 
-Most "wget clones" either:
+Most developer utilities either:
 
-- Pull in hundreds of dependencies
+- Are buried inside monolith frameworks
 - Require Node.js on every target machine
-- Ship bloated runtimes just to download a file
+- Have inconsistent semantics across platforms
+- Don't ship as static binaries
 
-`meo-agent` takes the opposite approach:
+`meo-agent` from Meo Code Labs takes a different approach:
 
-- **Zero external dependencies** — only Node.js built-in modules (`fs`, `http`, `https`)
-- **Single static binary** — packaged with [`@yao-pkg/pkg`](https://github.com/yao-pkg/pkg)
+- **Zero external runtime** — packaged as a single static binary
 - **Predictable behavior** — same semantics on Windows, macOS, and Linux
-- **Minimal footprint** — roughly 80 MB binary, instant startup
+- **Bundled toolchain** — multiple agents in one repository
+- **Opencode-native** — slash-command integration out of the box
+- **Research-grade** — designed to be auditable, minimal, and scriptable by AI agents
 
 ---
 
-## Features
+## Tools Bundled
 
-| Feature | Description |
-|---------|-------------|
-| HTTP & HTTPS | Download from both protocols seamlessly |
-| Auto filename detection | Uses the last path segment of the URL, falls back to `index.html` |
-| Streaming writes | Files are written via stream pipe — no full buffering in memory |
-| Cross-platform | Prebuilt binaries for Windows, macOS, and Linux |
-| Zero runtime deps | Static binary needs no Node.js installation on target |
-| Auto-release | GitHub Actions builds & publishes on every push to `master`/`main` |
+### 1. meo-agent (CLI)
+
+The flagship tool: a wget clone built from Node.js core modules only.
+
+```bash
+meo-agent https://example.com/file.zip
+```
+
+Features:
+
+- HTTP & HTTPS support
+- Auto-detected output filename from URL path
+- Streaming writes — no full buffering in memory
+- Cross-platform static binary (no Node.js install required on target)
+
+**Source:** [`index.js`](index.js) · **Packaging:** [`@yao-pkg/pkg`](https://github.com/yao-pkg/pkg)
+
+---
+
+### 2. developer-kit
+
+> *Scaffold a complete use case from a single brief.*
+
+Located in [`developer-kit/`](developer-kit/). Generates a folder `usecase-NNN/` containing three structured documents from a one-sentence brief:
+
+| File | Contents |
+|------|----------|
+| `requirements.md` | Functional & non-functional requirements, acceptance criteria, assumptions, constraints |
+| `tasks.md` | 5-phase task breakdown (Discovery, Design, Implementation, Quality, Release) |
+| `tdd.md` | Test matrix, edge cases, performance tests, security tests, CI/CD integration |
+
+**Usage:**
+
+```bash
+S=~/Developer/meocode/meo-agent/developer-kit/developer-kit.sh
+"$S" ./docs "Add login with OAuth2"
+```
+
+Counter logic auto-detects `usecase-NNN` directories and increments to the next available number. Supports explicit numbering, custom paths, and interactive TUI prompts.
+
+Full docs: [`developer-kit/README.md`](developer-kit/README.md)
+
+---
+
+### 3. generate-pr
+
+> *Auto-generate a pull request description from your git diff — at the review depth you need.*
+
+Located in [`pull_request/`](pull_request/). Two-phase workflow:
+
+1. **Metadata phase** (script) — auto-fills repo, branch, file list, diff stat, and commits
+2. **Analysis phase** (AI / manual) — fills in `<!-- REVIEW:* -->` placeholders for `lead` / `hod` review levels
+
+**Usage:**
+
+```bash
+S=~/Developer/meocode/meo-agent/pull_request/generate-pr.sh
+
+# Basic PR description (default)
+"$S"
+
+# Lead-level review
+"$S" lead improvements/pickup-report/08062026
+
+# HOD-level review with PR number
+"$S" hod request/SCA-Ticketing/17062026 515
+```
+
+Outputs to `pull_request/output/<app_name>/pull_request_<datetime>.md` with auto-suffix to prevent overwrites.
+
+Full docs: [`pull_request/README.md`](pull_request/README.md)
 
 ---
 
 ## Installation
 
-### End Users (recommended)
+### End Users — Prebuilt Binary (recommended)
 
-Download the prebuilt binary for your platform from the [**Releases**](../../releases) page.
+Download the prebuilt binary from the [**Releases**](../../releases) page.
 
 #### Windows
 
-1. Download `meo-agent-win.exe` from the latest release
-2. Rename to `meo-agent.exe` (optional) and place it anywhere in your `PATH`
-3. Open Command Prompt / PowerShell and run:
-
 ```powershell
-meo-agent.exe https://example.com/file.zip
+# Download meo-agent-win.exe from latest release, then in PowerShell:
+.\meo-agent-win.exe https://example.com/file.zip
 ```
 
 #### macOS
 
 ```bash
-# Download meo-agent-macos from latest release, then:
 chmod +x meo-agent-macos
-mv meo-agent-macos /usr/local/bin/meo-agent   # optional, for global access
 ./meo-agent-macos https://example.com/file.zip
 ```
 
 #### Linux
 
 ```bash
-# Download meo-agent-linux from latest release, then:
 chmod +x meo-agent-linux
 ./meo-agent-linux https://example.com/file.zip
 ```
 
-#### via npm (cross-platform)
+#### via npm
 
 ```bash
-npm install -g meo-agent
+npm install -g @meocode-labs/meo-agent
 meo-agent https://example.com/file.zip
 ```
 
@@ -102,24 +184,39 @@ meo-agent https://example.com/file.zip
 
 ---
 
-### Developers (from source)
-
-Clone and link the package locally so it works as a global command on your machine:
+### Developers — From Source
 
 ```bash
 git clone https://github.com/meocode-labs/meo-agent.git
 cd meo-agent
 npm install
-npm link
+npm link           # install meo-agent as a global command
 ```
 
-After linking, `meo-agent` is available system-wide:
+After linking, the CLI is available system-wide:
 
 ```bash
 meo-agent https://example.com/file.zip
 ```
 
-To remove the global link later:
+For the companion tools (`developer-kit`, `generate-pr`), invoke directly from source:
+
+```bash
+./developer-kit/developer-kit.sh ./docs "Add login with OAuth2"
+./pull_request/generate-pr.sh
+```
+
+For opencode integration, symlink the commands:
+
+```bash
+mkdir -p ~/.config/opencode/command
+ln -s $(pwd)/.opencode/developer-kit.md ~/.config/opencode/command/developer-kit.md
+ln -s $(pwd)/.opencode/generate-pr.md   ~/.config/opencode/command/generate-pr.md
+```
+
+Then restart opencode and use `/developer-kit`, `/generate-pr` inside your AI session.
+
+To uninstall:
 
 ```bash
 npm unlink -g meo-agent
@@ -127,51 +224,55 @@ npm unlink -g meo-agent
 
 ---
 
-## Usage
+## Usage by Tool
+
+### meo-agent CLI
 
 ```
 meo-agent <URL>
 ```
 
-### Arguments
-
 | Argument | Required | Description |
 |----------|----------|-------------|
 | `URL`    | Yes      | Full HTTP or HTTPS URL of the file to download |
 
-### Exit codes
-
-| Code | Meaning |
-|------|---------|
-| `0`  | Download completed successfully |
-| `1`  | Missing URL argument |
-| `1`  | Network error or invalid URL |
-
----
-
-## Examples
+Examples:
 
 ```bash
-# Download a zip archive
 meo-agent https://github.com/meocode-labs/meo-agent/archive/refs/heads/main.zip
-
-# Download from an HTTPS CDN
 meo-agent https://cdn.example.com/image.png
-
-# Download a JSON API snapshot
 meo-agent https://api.example.com/v1/export.json
-
-# Falls back to index.html if URL has no path
-meo-agent https://example.com/
 ```
 
-The file is saved to the **current working directory** using the last segment of the URL as the filename. If the URL ends with `/`, the file is named `index.html`.
+### developer-kit
+
+```bash
+developer-kit <docs_dir> "<brief>" [usecase_number]
+```
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `docs_dir`        | Yes | Target directory (auto-created if missing) |
+| `brief`           | Yes | One-sentence use case description |
+| `usecase_number`  | No  | Explicit 3-digit number (auto-incremented if omitted) |
+
+### generate-pr
+
+```bash
+generate-pr [type] [branch] [pr_number]
+```
+
+| Argument | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `type`        | No  | `basic` | `basic` \| `lead` \| `hod` |
+| `branch`      | No  | current | Target branch |
+| `pr_number`   | No  | `TBD`   | PR number for URL |
 
 ---
 
 ## Build from Source
 
-To produce the binaries yourself (requires Node.js 18+):
+To produce the static binaries yourself (requires Node.js 18+):
 
 ```bash
 git clone https://github.com/meocode-labs/meo-agent.git
@@ -180,7 +281,7 @@ npm install
 npm run build
 ```
 
-Output files inside `dist/`:
+Output inside `dist/`:
 
 ```
 dist/meo-agent-win.exe
@@ -188,24 +289,11 @@ dist/meo-agent-macos
 dist/meo-agent-linux
 ```
 
-To bump the version:
+To release a new version:
 
-1. Edit `package.json` → `"version": "1.0.2"`
-2. Commit and push to `main` — GitHub Actions auto-creates release `v1.0.2`
-
----
-
-## How It Works
-
-1. CLI entry point: `index.js` (top-level shebang `#!/usr/bin/env node`)
-2. Reads URL from `process.argv[2]`
-3. Picks `https` or `http` module based on URL scheme
-4. Pipes response stream directly to a `fs.createWriteStream`
-5. Closes write stream on `finish` event → prints confirmation
-
-The full source is ~25 lines. Read it here: [`index.js`](index.js).
-
-Packaging is handled by `@yao-pkg/pkg`, which embeds the Node.js runtime into a single executable — no separate Node install needed on the target machine.
+1. Bump `package.json` → `"version": "1.0.3"`
+2. Commit and push to `main`
+3. GitHub Actions auto-creates `v1.0.3` with binaries and full release notes
 
 ---
 
@@ -214,29 +302,42 @@ Packaging is handled by `@yao-pkg/pkg`, which embeds the Node.js runtime into a 
 ```
 meo-agent/
 ├── .github/workflows/release.yml   # Auto-build & release on push to main
-├── index.js                        # CLI source (~25 lines)
-├── package.json                    # Metadata, bin entry, pkg targets
+├── developer-kit/                  # Use case scaffolder (bash + templates)
+│   ├── developer-kit.sh
+│   └── templates/{requirements,tasks,tdd}.md
+├── pull_request/                   # PR description generator (bash + templates)
+│   ├── generate-pr.sh
+│   └── templates/{basic,lead-review,hod-review}.md
+├── index.js                        # meo-agent CLI source
+├── package.json
 ├── README.md
-├── LICENSE
 ├── CHANGELOG.md
+├── LICENSE
 └── .npmignore
 ```
 
 ---
 
+## Maintainers
+
+| Role | Maintainer |
+|------|------------|
+| Lead Maintainer & Researcher | [@penadidik](https://github.com/penadidik) |
+| Organization | [Meo Code Labs](https://github.com/meocode-labs) |
+| Website | [https://meocode.com](https://meocode.com) |
+
+---
+
 ## Contributing
 
-Contributions are welcome. For substantial changes, please open an issue first to discuss the proposed change.
+We welcome pull requests, bug reports, and feature proposals. For substantial changes, please open an issue first.
 
 ```bash
-# Fork & clone
 git clone https://github.com/YOUR-USERNAME/meo-agent.git
 cd meo-agent
 npm install
 npm link
-
-# Develop, then:
-npm run build    # test binary output
+npm run build
 ```
 
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/):
@@ -251,14 +352,17 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ## Roadmap
 
-- [ ] Progress bar for large downloads
+- [ ] Progress bar for large downloads (`meo-agent`)
 - [ ] Resume support (`--continue`)
 - [ ] Custom output filename (`--output <name>`)
-- [ ] Mirror mode (recursive)
-- [ ] Checksum verification (`--sha256`)
+- [ ] JSON output mode for AI agents (`--json`)
+- [ ] Plugin architecture for additional developer tools
+- [ ] `meo-agent doctor` — environment diagnostics
 
 ---
 
 ## License
 
-[MIT](LICENSE) © 2026 [meocode-labs](https://github.com/meocode-labs) & contributors
+[MIT](LICENSE) © 2026 [Meo Code Labs](https://meocode.com). Maintained by [@penadidik](https://github.com/penadidik).
+
+> *"Small tools, well made, used often."* — Meo Code Labs
