@@ -1,6 +1,6 @@
 {
   "name": "meo-agent",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Wget-like CLI for downloading files via HTTP/HTTPS, distributed as a single static binary via @yao-pkg/pkg and GitHub Actions release workflow.",
   "main": "index.js",
   "bin": {
@@ -9,7 +9,7 @@
   "scripts": {
     "build": "npx @yao-pkg/pkg ."
   },
-  "dependencies": {
+  "devDependencies": {
     "@yao-pkg/pkg": "^5.16.1"
   },
   "pkg": {
