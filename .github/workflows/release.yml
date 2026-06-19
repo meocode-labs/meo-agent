@@ -34,4 +34,4 @@ jobs:
           files: |
             dist/meo-agent-win.exe
             dist/meo-agent-macos
-        fail_on_unmatched_files: false
+          fail_on_unmatched_files: false
