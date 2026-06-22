@@ -8,3 +8,5 @@ dist/
 coverage/
 .tmp/
 package-lock.json
+pull_request/output/
+developer-kit/output/
