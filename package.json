@@ -1,6 +1,6 @@
 {
   "name": "@penadidik/meo-agent",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "The unified AI agent runtime from Meo Code Labs — bundles a wget-like CLI with --json/--output/--continue/--sha256/--mirror/doctor/plugins features, developer-kit (use case scaffolder), and generate-pr (PR description generator) into one cross-platform distribution.",
   "main": "index.js",
   "bin": {

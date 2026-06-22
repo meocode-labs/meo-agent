@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-06-22
+
+### Added — Pull request workflow
+- **GitHub PR templates** — default template (`.github/pull_request_template.md`) auto-loads for every PR with required sections: summary, type-of-change, testing, scope, 12-point Definition-of-Done checklist, breaking changes, reviewer focus
+- **PR template variants** in `.github/PULL_REQUEST_TEMPLATE/`:
+  - `review-checklist.md` — 10-section reviewer checklist (correctness, design, code quality, tests, security, performance, observability, docs, CI)
+  - `bug-fix.md` — root-cause analysis + regression-prevention focus
+  - `feature.md` — problem-statement → alternatives → rollout-plan flow
+
+### Changed
+- `.gitignore` — exclude generated artifact directories `pull_request/output/` and `developer-kit/output/` (previously only excluded from npm tarball)
+
+### Published
+- npm: https://www.npmjs.com/package/@penadidik/meo-agent
+
 ## [1.2.1] - 2026-06-19
 
 ### Changed
@@ -36,7 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Roadmap item: "Auth via headers" — deferred (not a core wget feature)
 
-[Unreleased]: https://github.com/meocode-labs/meo-agent/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/meocode-labs/meo-agent/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/meocode-labs/meo-agent/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/meocode-labs/meo-agent/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/meocode-labs/meo-agent/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/meocode-labs/meo-agent/compare/v1.0.3...v1.1.0
